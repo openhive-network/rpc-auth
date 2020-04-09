@@ -1,8 +1,8 @@
 
-@steemit/rpc-auth
+@hivechain/rpc-auth
 =================
 
-JSONRPC 2.0 authentication with steem authorities
+JSONRPC 2.0 authentication with hive authorities
 
 
 Specification
@@ -10,7 +10,7 @@ Specification
 
 ### Overview
 
-Request signing for [JSON-RPC 2.0](http://www.jsonrpc.org/specification) implemented using [steem](https://steem.io) authorities.
+Request signing for [JSON-RPC 2.0](http://www.jsonrpc.org/specification) implemented using [hive](https://hive.io) authorities.
 
 ### Design Goals
 
@@ -23,7 +23,7 @@ Request signing for [JSON-RPC 2.0](http://www.jsonrpc.org/specification) impleme
 
 ### Signed request
 
-Requests are signed with steem keys belonging to the sender.
+Requests are signed with hive keys belonging to the sender.
 
 Example JSON-RPC request:
 ```json
@@ -99,7 +99,7 @@ signature = ecdsa_sign(message, signing_key)
   1. `request['params']['__signed']['nonce']` must exist and be a hex string of length 16 (8 bytes decoded)
   1. `request['params']['__signed']['timestamp']` must exist and be a valid iso8601 datetime ending in Z
   1. `request['params']['__signed']['timestamp']` must be within the last 60 seconds
-  1. `request['params']['__signed']['account']` must be a valid steem blockchain account
+  1. `request['params']['__signed']['account']` must be a valid hive blockchain account
   1. `request['params']['__signed']['signature']` must be a hex string >= 64 chars (32+ bytes decoded)
   1. construct `first = sha256( request['params']['__signed']['timestamp'] + request['params']['__signed']['account'] + request['method'] + request['params']['__signed']['params'] ).bytes()`
   1. construct `signedstring = sha256( K + first + unhexlify(nonce)).bytes()`

@@ -2,14 +2,14 @@ import 'mocha'
 import * as assert from 'assert'
 import {randomBytes} from 'crypto'
 import * as fetch from 'node-fetch'
-import {PrivateKey, Client, utils, Signature} from 'dsteem'
+import {PrivateKey, Client, utils, Signature} from '@hivechain/dhive'
 
 import {sign, validate, JsonRpcRequest, VerifyMessage, SignedJsonRpcRequest} from './../src/'
 
 const dummyVerify: VerifyMessage = async (message: Buffer, signatures: string[], account: string) => {}
 
 const client = Client.testnet()
-const dsteemVerify: VerifyMessage = async (message: Buffer, signatures: string[], account: string) => {
+const dhiveVerify: VerifyMessage = async (message: Buffer, signatures: string[], account: string) => {
     const opts = {
         hash: message,
         signatures,
@@ -177,13 +177,13 @@ describe('rpc auth', function() {
         const signed = sign(req, testAccount.username, [testKey])
 
         // valid
-        await validate(signed, dsteemVerify)
+        await validate(signed, dhiveVerify)
 
         // invalid method
         invalid = utils.copy(signed)
         invalid.method = 'foo.bar2'
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -191,7 +191,7 @@ describe('rpc auth', function() {
         invalid = utils.copy(signed)
         invalid.params.__signed.account = 'baz'
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -199,7 +199,7 @@ describe('rpc auth', function() {
         invalid = utils.copy(signed)
         invalid.params.__signed.account = 'baz'
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -207,7 +207,7 @@ describe('rpc auth', function() {
         invalid = utils.copy(signed)
         invalid.params.__signed.nonce = randomBytes(8).toString('hex')
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -215,7 +215,7 @@ describe('rpc auth', function() {
         invalid = utils.copy(signed)
         invalid.params.__signed.params = 'eyJpbGlrZSI6InR1cnRsZXMifQ=='
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -223,7 +223,7 @@ describe('rpc auth', function() {
         invalid = utils.copy(signed)
         invalid.params.__signed.timestamp = '3020-01-01T00:00:00Z'
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -233,7 +233,7 @@ describe('rpc auth', function() {
             PrivateKey.fromSeed('foobar').sign(randomBytes(32)).toString()
         ]
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
 
@@ -243,7 +243,7 @@ describe('rpc auth', function() {
             PrivateKey.fromString(testKey).sign(randomBytes(32)).toString()
         ]
         error = await assertThrows(async () => {
-            await validate(invalid, dsteemVerify)
+            await validate(invalid, dhiveVerify)
         })
         assert.equal(String(error), 'ValidationError: Verification failed (Signature invalid)')
     })

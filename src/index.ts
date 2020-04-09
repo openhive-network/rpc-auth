@@ -1,9 +1,9 @@
 /**
- * @file JSONRPC 2.0 request authentication with steem authorities.
+ * @file JSONRPC 2.0 request authentication with hive authorities.
  * @author Johan Nordberg <johan@steemit.com>
  */
 
-import {hexify, PrivateKey} from '@steemit/libcrypto'
+import {hexify, PrivateKey} from '@hivechain/libcrypto'
 import {createHash, randomBytes} from 'crypto'
 
 /**
@@ -37,7 +37,7 @@ export interface SignedJsonRpcRequest extends JsonRpcRequest {
             nonce: string
             /** ISO8601 formatted date */
             timestamp: string
-            /** Signers steemit account name */
+            /** Signers hive account name */
             account: string
             /** JSON+base64 encoded request params */
             params: string
@@ -70,7 +70,7 @@ class ValidationError extends Error {
  * Create request hash to be signed.
  *
  * @param timestamp  ISO8601 formatted date e.g. `2017-11-14T19:40:29.077Z`.
- * @param account    Steem account name that is the signer.
+ * @param account    Hive account name that is the signer.
  * @param method     RPC request method.
  * @param params     Base64 encoded JSON string containing request params.
  * @param nonce      8 bytes of random data.
@@ -143,7 +143,7 @@ export function sign(request: JsonRpcRequest, account: string, keys: any[]): Sig
  * @param account     Account whose posting authority created the signatures.
  *
  * Responsible for:
- *   1. Account must be a valid steem blockchain account
+ *   1. Account must be a valid hive blockchain account
  *   2. All signatures must be a hex string >= 64 chars (32+ bytes decoded)
  *   3. Signature matches message
  *   4. Signature was made with accounts posting authority
